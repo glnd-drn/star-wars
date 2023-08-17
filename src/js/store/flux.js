@@ -12,6 +12,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
+			],
+			charactersStarWars: [
+
+			],
+			planetsStarWars: [
+
+			],
+			vehiclesStarWars: [
+
+			],
+			favoriteItems: [
+
 			]
 		},
 		actions: {
@@ -27,7 +39,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();
-
 				//we have to loop the entire demo array to look for the respective index
 				//and change its color
 				const demo = store.demo.map((elm, i) => {
@@ -37,7 +48,49 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+			//function to update myCharacters
+			fetchCharactersStarWars: () => {
+				fetch('https://swapi.dev/api/people')
+					.then(response => response.json())
+					//SetStore se utiliza para guardar la data en los arrays de store.
+					.then(data => {
+						console.log(data);
+						setStore({ charactersStarWars: data.results })
+					})
+					.catch(err => err);
+			},
+			fetchPlanetsStarWars: () => {
+				fetch('https://swapi.dev/api/planets')
+					.then(response => response.json())
+					//SetStore se utiliza para guardar la data en los arrays de store.
+					.then(data => {
+						console.log(data);
+						setStore({ planetsStarWars: data.results })
+					})
+					.catch(err => err);
+			},
+			fetchVehiclesStarWars: () => {
+				fetch('https://swapi.dev/api/vehicles')
+					.then(response => response.json())
+					//SetStore se utiliza para guardar la data en los arrays de store.
+					.then(data => {
+						console.log(data);
+						setStore({ vehiclesStarWars: data.results })
+					})
+					.catch(err => err);
+			},
+			addFavoriteItems: (newItem) => {
+				const store = getStore();
+				setStore({ favoriteItems: [newItem, ...store.favoriteItems] })
+				localStorage.setItem("favoriteItems", JSON.stringify(store.favoriteItems));
+			},
+			deleteFavoriteItems: (position) => {
+				const store = getStore();
+				let newFavoriteList = store.favoriteItems.filter((favorite, index) => index != position)
+				setStore({ favoriteItems: newFavoriteList })
 			}
+
 		}
 	};
 };
